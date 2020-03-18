@@ -1,58 +1,54 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { TimerService } from './timer.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-timer',
   templateUrl: './timer.component.html',
-  styleUrls: ['./timer.component.scss']
+  styleUrls: ['./timer.component.scss'],
+  providers: [TimerService],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimerComponent implements OnInit, OnDestroy {
 
   @Output() onComplete = new EventEmitter<void>();
-  @Input() init:number = 20;
+  @Input() init: number = 20;
+  private countdownEndSubscription: Subscription = null;
+  private countdownSubscription: Subscription = null;
+  public countdown: number = null;
 
-  private countdownTimerRef:any = null;
-  public countdown:number = 0;
 
-  constructor() { }
+
+  constructor(public timerService: TimerService, private cdRef: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.startCountdown();
+    this.timerService.restartCountdown(this.init);
+
+    this.countdownEndSubscription = this.timerService.countdownEnd$
+      .subscribe(() => {
+        this.onComplete.emit();
+      })
+    
+    this.countdownSubscription = this.timerService.countdown$
+      .subscribe( (data) => {
+        this.countdown = data;
+        this.cdRef.markForCheck();
+      })
   }
 
-  ngOnDestroy():void{
-    this.clearTimeout();
+
+  ngOnDestroy(): void {
+    // destruir el timer
+    this.timerService.destroy();
+    this.countdownEndSubscription.unsubscribe();
+    this.countdownSubscription.unsubscribe();
   }
 
-  startCountdown(){
-    if(this.init && this.init >0){
-      this.clearTimeout();
-      this.countdown = this.init;
-      this.doCountdown();
-    }
+  get progress (){
+    console.log('%cLlamando al getter', 'background-color: aqua;');
+    return (this.init-( this.countdown))/this.init*100;
   }
 
-  private doCountdown(){
-    this.countdownTimerRef = setTimeout(()=>{
-      this.countdown = this.countdown -1;
-      this.processCountdown();
-    }, 1000);
-  }
 
-  private processCountdown(){
-    if(this.countdown == 0){
-      this.onComplete.emit();
-      console.log("--countdown end--");
-    }
-    else{
-      this.doCountdown();
-    }
-  }
-
-  private clearTimeout(){
-    if(this.countdownTimerRef){
-      clearTimeout(this.countdownTimerRef);
-      this.countdownTimerRef = null;
-    }
-  }
 
 }

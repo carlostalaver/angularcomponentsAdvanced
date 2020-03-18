@@ -1,5 +1,5 @@
 <ul>
-  <li *ngFor="let tab of tabs" 
+  <li *ngFor="let tab of tabsHijos" 
       [ngClass]="{'active':tab.isActive}" 
       (click)="selectTab(tab)">
       {{tab.title}}

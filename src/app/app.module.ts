@@ -11,6 +11,7 @@ import { AlertViewComponent } from './alert-view/alert-view.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { TabComponent } from './tab/tab.component';
 import { SimpleAlertViewComponent } from './simple-alert-view/simple-alert-view.component';
+import { CountdownComponent } from './countdown/countdown.component';
 
 
 
@@ -23,7 +24,8 @@ import { SimpleAlertViewComponent } from './simple-alert-view/simple-alert-view.
     AlertViewComponent,
     TabsComponent,
     TabComponent,
-    SimpleAlertViewComponent
+    SimpleAlertViewComponent,
+    CountdownComponent
   ],
   imports: [
     BrowserModule,
@@ -31,6 +33,7 @@ import { SimpleAlertViewComponent } from './simple-alert-view/simple-alert-view.
     HttpModule
   ],
   providers: [],
+  entryComponents: [SimpleAlertViewComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

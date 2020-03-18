@@ -31,4 +31,30 @@
             background-color:#AAA;
         }
     }
+
+
+    
+    .initInput {
+        display: flex;
+        input {
+            margin-left: 20px;
+            height: 40px;
+            font-size: 20px;
+            min-width: 50px;
+        }  
+    }
+
+    .cancel-button{
+        margin-right: 10px;
+        background-color: #777;
+        &:active{
+            background-color: #444; 
+        }
+    }
+
+    .time-in {
+        font-weight: 600;
+        color: #9932cc;
+        font-size: 12px;;
+    }
 }
